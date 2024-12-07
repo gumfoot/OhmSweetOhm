@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+
+    <!-- BREADCRUMB -->
+    <div id="breadcrumb" class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="breadcrumb-header">{% trans 'Checkout' %}</h3>
+                    <ul class="breadcrumb-tree">
+                        <li><a href="{% url 'index' %}">{% trans 'Home' %}</a></li>
+                        <li class="active">{% trans 'Checkout' %}</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /BREADCRUMB -->
+
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+
+                <div class="col-md-7">
+                    <!-- Billing Details -->
+                    <div class="billing-details">
+                        <div class="section-title">
+                            <h3 class="title">{% trans 'Billing address' %}</h3>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="first-name" placeholder="{% trans 'First Name' %}">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="last-name" placeholder="{% trans 'Last Name' %}">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="email" name="email" placeholder="{% trans 'Email' %}">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="address" placeholder="{% trans 'Address' %}">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="city" placeholder="{% trans 'City' %}">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="country" placeholder="{% trans 'Country' %}">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="zip-code" placeholder="{% trans 'ZIP Code' %}">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="tel" name="tel" placeholder="{% trans 'Telephone' %}">
+                        </div>
+                    
+                    </div>
+                    <!-- /Billing Details -->
+
+                    <!-- Shipping Details -->
+                    <div class="shipping-details">
+                        <div class="section-title">
+                            <h3 class="title">{% trans 'Shipping address' %}</h3>
+                        </div>
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="shipping-address">
+                            <label for="shipping-address">
+                                <span></span>
+                                {% trans 'Ship to a different address?' %}
+                            </label>
+                            {% csrf_token %}
+                            <div class="caption">
+                                <div class="form-group">
+                                    <input class="input" type="text" name="first-name" placeholder="{% trans 'First Name' %}">
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="text" name="last-name" placeholder="{% trans 'Last Name' %}">
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="email" name="email" placeholder="{% trans 'Email' %}">
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="text" name="address" placeholder="{% trans 'Address' %}">
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="text" name="city" placeholder="{% trans 'City' %}">
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="text" name="country" placeholder="{% trans 'Country' %}">
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="text" name="zip-code" placeholder="{% trans 'ZIP Code' %}">
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="tel" name="tel" placeholder="{% trans 'Telephone' %}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Shipping Details -->
+
+                    <!-- Order notes -->
+                    <div class="order-notes">
+                        <textarea class="input" placeholder="{% trans 'Order Notes' %}"></textarea>
+                    </div>
+                    <!-- /Order notes -->
+                </div>
+
+                <!-- Order Details -->
+                <div class="col-md-5 order-details">
+                    <div class="section-title text-center">
+                        <h3 class="title">{% trans 'Your Order' %}</h3>
+                    </div>
+                    <div class="order-summary">
+                        <div class="order-col">
+                            <div><strong>{% trans 'PRODUCT QUANTITY' %}</strong></div>
+                            <div><strong>{% trans 'TOTAL' %}</strong></div>
+                        </div>
+                        <div class="order-products">
+                            <div class="order-col">
+                                <div>{{ total_quantity }}</div>
+                                <div>Ksh{{ total_sum }}</div>
+                            </div>
+                            <div class="order-col">
+                                <div>{% trans 'PRODUCT QUANTITY' %}</div>
+                                <div>{{ total_quantity }}</div>
+                                
+                            </div>
+                        </div>
+                        <div class="order-col">
+                            <div>{% trans 'Shipping' %}</div>
+                            <div><strong>{% trans 'FREE' %}</strong></div>
+                        </div>
+                        <div class="order-col">
+                            <div><strong>{% trans 'TOTAL' %}</strong></div>
+                
+                            <div><strong class="order-total">Ksh{{ total_sum }}</strong></div>
+                        
+                        </div>
+                    </div>
+                    <div class="payment-method">
+                        <div class="input-radio">
+                            <input type="radio" name="payment" id="payment-3">
+                            <label for="payment-3">
+                                <span></span>
+                                {% trans 'Paypal' %}
+                            </label>
+                            <div class="caption">
+                                <p>{% trans 'PayPal is an online payment platform that facilitates payments between individuals and businesses.' %}</p>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <a href="{% url 'pay' %}" class="primary-btn order-submit">{% trans 'Place order' %}</a>
+                </div>
+                <!-- /Order Details -->
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+
+{% endblock %}

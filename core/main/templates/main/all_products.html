@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+    <ul>
+        {% for product in products %}
+            <li>
+                <a href="{% url 'product_detail' product.id %}">
+                
+                <!-- BREADCRUMB -->
+                <div id="breadcrumb" class="section">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ul class="breadcrumb-tree">
+                                    <li>{% trans 'Products' %}</li>
+                                    <li class="active">{{ product.pr_name }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /BREADCRUMB -->
+
+                <!-- SECTION: Slideshow -->
+                <div class="section">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="slideshow-container">
+                                    {% for slide in slides %}
+                                    <div class="slide">
+                                        <img src="{{ slide.image.url }}" alt="{{ slide.alt_text }}">
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /SECTION: Slideshow -->
+                
+                <!-- SECTION -->
+                <div class="section">
+                    <div class="container">
+                        <div class="row">
+                            <!-- Product main img -->
+                            <div class="col-md-4">
+                                <div id="product-main-img">
+                                    <div class="product-preview">
+                                        <img src="{{ product.pr_img.url }}" alt="{{ product.pr_name }}" width="300" height="300">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Product main img -->
+
+                            <!-- Product thumb imgs -->
+                            <div class="col-md-2">
+                                <div id="product-imgs">
+                                    {% for picture in pictures %}
+                                        <div class="product-preview">
+                                            <img src="{{ picture.pictures.url }}" width="80" height="80" alt="{% trans 'Product Thumbnail' %}">
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <!-- /Product thumb imgs -->
+
+                            <!-- Product details -->
+                            <div class="col-md-6">
+                                <div class="product-details">
+                                    <h2 class="product-name">{{ product.pr_name }}</h2>
+                                    <div>
+                                        <h3 class="product-price">Ksh{{ product.new_price }}<del class="product-old-price">Ksh{{ product.old_price }}</del></h3>
+                                        <span class="product-available">{% trans 'In Stock' %}</span>
+                                    </div>
+                                    <div class="product-description">
+                                        <a href="{% url 'product_detail' product.id %}" class="product-btn about-product">
+                                            {% trans 'About Product' %}
+                                        </a>
+                                        <a href="{% url 'add_to_wishlist' product.id %}" class="product-btn add-to-wishlist">
+                                            {% trans 'Add to Wishlist' %}
+                                        </a>
+                                    </div>
+                                    <ul class="product-info">
+                                        <li class="product-info-item">{% trans 'Category' %}:</li>
+                                        <li class="product-info-item">{{ product.category }}</li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /SECTION -->
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

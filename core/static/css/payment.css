@@ -1,0 +1,123 @@
+/* payment.css */
+
+/* General Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+/* Card Styles */
+
+.card .img-box {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.card img {
+    max-width: 150px;
+}
+
+.card .number {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.card .d-flex {
+    justify-content: space-between;
+}
+
+/* Payment Methods Styles */
+
+.card-body p {
+    margin-bottom: 10px;
+}
+
+.collapse.show {
+    display: block;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.payment {
+    margin-top: 20px;
+}
+
+/* Form Styles */
+
+.form__div {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.form__div input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    background-color: transparent;
+}
+
+.form__div input:focus {
+    outline: none;
+}
+
+.form__div label {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+    transition: 0.3s ease;
+}
+
+.form__div input:focus ~ label,
+.form__div input:valid ~ label {
+    top: -10px;
+    font-size: 12px;
+    color: #007bff;
+}
+
+.form-control {
+    border-radius: 5px;
+}
+
+/* Responsive Styles */
+
+@media (max-width: 768px) {
+    .container {
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .card {
+        margin-bottom: 20px;
+    }
+}
+

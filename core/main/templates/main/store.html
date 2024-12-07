@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+
+
+{% for image in images %}
+<img src="{{ image.image.url }}" alt="{{ image.image_title }}">
+{% endfor %}
+<!-- ASIDE -->
+<div id="aside" class="col-md-3">
+    <!-- Price Filter -->
+    <div class="aside">
+        <h3 class="aside-title">Price</h3>
+        <div class="price-filter">
+            <form id="price-filter-form">
+                <div class="input-group">
+                    <input type="number" id="minPrice" name="min_price" class="form-control" placeholder="Min">
+                    <input type="number" id="maxPrice" name="max_price" class="form-control" placeholder="Max">
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- /Price Filter -->
+    <div class="aside">
+        <h3 class="aside-title">Product Name</h3>
+        <div class="checkbox-filter">
+            <form id="product-name-filter-form" method="GET" action="{% url 'store' %}">
+                {% if category_id %}
+                    <input type="hidden" name="category" value="{{ category_id }}">
+                {% endif %}
+                {% if search_query %}
+                    <input type="hidden" name="search" value="{{ search_query }}">
+                {% endif %}
+                
+                <input type="text" 
+                       id="productName" 
+                       name="product_name" 
+                       class="form-control" 
+                       placeholder="Search by Product Name"
+                       value="{{ product_name }}"> 
+                <button type="submit" class="btn btn-primary">Apply</button>
+            </form>
+        </div>
+        <p class="text-muted mt-2">
+            Found {{ total_products }} product{{ total_products|pluralize }} total
+        </p>
+    </div>
+</div>
+<!-- /ASIDE -->
+
+<!-- STORE -->
+<div id="store" class="col-md-9">
+    <!-- store top filter -->
+    <div class="store-filter clearfix">
+        <!-- /store top filter -->
+        <!-- store products -->
+        <div class="row" id="productList">
+            {% for product in products %}
+            <div class="col-md-4 col-xs-6 product-item"
+                 data-category="{{ product.category.id }}"
+                 data-price="{{ product.new_price }}"
+                 data-brand="{{ product.brand }}">
+                <div class="product">
+                    <div class="product-img">
+                        <img src="{{ product.pr_img.url }}" alt="{{ product.pr_name }}">
+                        <div class="product-label">
+                            {% if product.discount %}
+                            <span class="sale">{{ product.discount }}%</span>
+                            {% endif %}
+                            {% if product.status %}
+                            <span class="new">{{ product.status }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-category">{{ product.category.category_name }}</p>
+                        <h3 class="product-name"><a href="{% url 'product_detail' product.id %}">{{ product.pr_name }}</a></h3>
+                        <h4 class="product-price">Ksh{{ product.new_price }} <del class="product-old-price">Ksh{{ product.old_price }}</del></h4>
+                        
+                        <div class="product-btns">
+                            <form method="post" action="{% url 'add_to_wishlist' product.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="add-to-wishlist" style="color: inherit; background-color: transparent; border: none;">
+                                    <i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span>
+                                </button>
+                            </form>
+                            <button class="quick-view">
+                                <a href="{% url 'product_detail' product.id %}">
+                                    <i class="fa fa-eye"></i>
+                                    <span class="tooltipp">quick view</span>
+                                </a>
+                            </button>
+                        </div>
+                    </div>
+                    <form method="post" action="{% url 'add_to_cart' product.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <div class="add-to-cart">
+                            <button type="submit" class="add-to-cart-btn">
+                                <i class="fa fa-shopping-cart"></i> add to cart
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- /store products -->
+       <!-- store bottom filter -->
+<div class="store-filter clearfix">
+    <span class="store-qty">Showing {{ products.paginator.per_page }} products per page</span>
+    <ul class="store-pagination">
+        {% if products.has_previous %}
+        <li><a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if category_id %}&category={{ category_id }}{% endif %}{% if product_name %}&product_name={{ product_name }}{% endif %}">First</a></li>
+        <li><a href="?page={{ products.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_id %}&category={{ category_id }}{% endif %}{% if product_name %}&product_name={{ product_name }}{% endif %}"><i class="fa fa-angle-left"></i></a></li>
+        {% endif %}
+    
+        {% for num in products.paginator.page_range %}
+            {% if products.number == num %}
+            <li class="active">{{ num }}</li>
+            {% else %}
+            <li><a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_id %}&category={{ category_id }}{% endif %}{% if product_name %}&product_name={{ product_name }}{% endif %}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+    
+        {% if products.has_next %}
+        <li><a href="?page={{ products.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_id %}&category={{ category_id }}{% endif %}{% if product_name %}&product_name={{ product_name }}{% endif %}"><i class="fa fa-angle-right"></i></a></li>
+        <li><a href="?page={{ products.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category_id %}&category={{ category_id }}{% endif %}{% if product_name %}&product_name={{ product_name }}{% endif %}">Last</a></li>
+        {% endif %}
+    </ul>
+</div> 
+<!-- /store bottom filter -->
+    </div>
+</div>
+<!-- /STORE -->
+<script>
+function filterProducts() {
+    var selectedCategories = [];
+    var allCategoriesSelected = $('#all-categories').is(':checked');
+
+    if (!allCategoriesSelected) {
+        $('.category-filter:checked').each(function(){
+            selectedCategories.push($(this).val());
+        });
+    }
+
+    // Adjust filtering logic based on selectedCategories or allCategoriesSelected
+    $('#productList .product-item').each(function(){
+        var category = $(this).data('category');
+        var categoryMatch = allCategoriesSelected || selectedCategories.includes(category.toString());
+        // Apply filtering logic based on categoryMatch
+        // ...
+    });
+}
+</script>
+
+{% endblock %}

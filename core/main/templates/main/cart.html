@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+    <h2>{% trans 'Your Shopping Cart' %}</h2>
+
+    {% if cart_items %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{% trans 'Product' %}</th>
+                    <th>{% trans 'Image' %}</th>
+                    <th>{% trans 'Quantity' %}</th>
+                    <th>{% trans 'Price' %}</th>
+                    <th>{% trans 'Total' %}</th>
+                    <th>{% trans 'Action' %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Display Cart Items -->
+                {% for item in cart_items %}
+                <tr>
+                    <td>
+                        {% if item.product %}
+                            {{ item.product.pr_name }}
+                        {% elif item.accessory %}
+                            {{ item.accessory.name }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.product %}
+                            <img src="{{ item.product.pr_img.url }}" alt="{{ item.product.pr_name }}" width="135" height="130">
+                        {% elif item.accessory %}
+                            <img src="{{ item.accessory.img.url }}" alt="{{ item.accessory.name }}" width="135" height="130">
+                        {% endif %}
+                    </td>
+                    <td class="quantity-cell">
+                        <form action="{% url 'update_cart' item.product_id %}" method="post" class="quantity-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="decrement">
+                            <button type="submit" class="quantity-button quantity-decrement" aria-label="{% trans 'Decrease Quantity' %}">-</button>
+                        </form>
+                        <span class="quantity-text">{{ item.quantity }}</span>
+                        <form action="{% url 'update_cart' item.product_id %}" method="post" class="quantity-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="increment">
+                            <button type="submit" class="quantity-button quantity-increment" aria-label="{% trans 'Increase Quantity' %}">+</button>
+                        </form>
+                    </td>
+                    <td>
+                        {% if item.product %}
+                            Ksh{{ item.product.new_price }}
+                        {% elif item.accessory %}
+                            Ksh{{ item.accessory.new_price }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        Ksh{{ item.item_total }}
+                    </td>
+                    <td>
+                        <form action="{% url 'delete_from_cart' item.product_id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">{% trans 'Delete' %}</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="cart-content">
+            {% if total_quantity > 0 %}
+                <p>{% trans 'Total Quantity' %}: {{ total_quantity }}</p>
+                <p>{% trans 'Total Amount' %}: Ksh{{ total_amount }}</p>
+                <a href="{% url 'index' %}" class="button">{% trans 'Add new product' %}</a>
+                <a href="{% url 'checkout' %}" class="button">{% trans 'Proceed to Checkout' %}</a>
+            {% else %}
+                <p>{% trans 'Your cart is empty.' %}</p>
+                <a href="{% url 'index' %}" class="btn btn-primary">{% trans 'Go to Home' %}</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>{% trans 'Your cart is empty.' %}</p>
+        <a href="{% url 'index' %}" class="btn btn-primary">{% trans 'Go to Home' %}</a>
+    {% endif %}
+</div>
+{% endblock %}

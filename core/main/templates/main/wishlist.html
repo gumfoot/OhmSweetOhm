@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Wishlist</h2>
+    {% if wishlist_items %}
+        {% for item in wishlist_items %}
+            <div class="product">
+                <h3>{{ item.product.pr_name }}</h3>
+                <p>{{ item.product.description }}</p>
+                <img src="{{ item.product.pr_img.url }}" alt="{{ item.product.pr_name }}" width="200" height="200">
+                <p>Price: Ksh{{ item.product.new_price }}</p>
+                <p>Name: {{ item.product.pr_name }}</p>
+                <p>Category: {{ item.product.category.category_name }}</p>
+                
+                <!-- Button container -->
+                <div class="button-container">
+                    <form method="post" action="{% url 'add_to_cart_from_wishlist' item.product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    </form>
+                    
+                    <form method="post" action="{% url 'delete_from_wishlist' item.product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </div>
+                
+                <hr>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Your wishlist is empty.</p>
+    {% endif %}
+</div>
+{% endblock %}
